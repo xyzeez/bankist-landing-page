@@ -29,3 +29,14 @@ document.addEventListener('keydown', function (e) {
     closeModal();
   }
 });
+
+// Smooth Scroll with js
+document.querySelector('.nav__links').addEventListener('click', e => {
+  e.preventDefault();
+
+  if (e.target.classList.contains('nav__link')) {
+    const id = e.target.getAttribute('href');
+    document.querySelector(id).scrollIntoView();
+    // document.querySelector(id).scrollIntoView({ behavior: 'smooth' }); // achieved with css scroll-behavior
+  }
+});
