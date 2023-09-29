@@ -1,13 +1,17 @@
 'use strict';
 
 ///////////////////////////////////////
-// Modal window
-
+// Variables
 const modal = document.querySelector('.modal');
 const overlay = document.querySelector('.overlay');
 const btnCloseModal = document.querySelector('.btn--close-modal');
 const btnsOpenModal = document.querySelectorAll('.btn--show-modal');
+const tabs = document.querySelectorAll('.operations__tab');
+const tabsContainer = document.querySelector('.operations__tab-container');
+const tabsContents = document.querySelectorAll('.operations__content');
+const nav = document.querySelector('.nav');
 
+// Modal window
 const openModal = function (e) {
   e.preventDefault();
   modal.classList.remove('hidden');
@@ -42,10 +46,6 @@ document.querySelector('.nav__links').addEventListener('click', e => {
 });
 
 // Tabbed Content
-const tabs = document.querySelectorAll('.operations__tab');
-const tabsContainer = document.querySelector('.operations__tab-container');
-const tabsContents = document.querySelectorAll('.operations__content');
-
 tabsContainer.addEventListener('click', e => {
   // Active Tab
   const clicked = e.target.closest('.operations__tab');
@@ -62,3 +62,21 @@ tabsContainer.addEventListener('click', e => {
   );
   contentArea.classList.add('operations__content--active');
 });
+
+// Menu fade Animation
+const handleHover = (element, opacity) => {
+  if (element.target.classList.contains('nav__link')) {
+    const link = element.target;
+    const linkSiblings = nav.querySelectorAll('.nav__link');
+    const logo = nav.querySelector('.nav__logo');
+
+    linkSiblings.forEach(sibling => {
+      if (sibling !== link) sibling.style.opacity = opacity;
+    });
+    logo.style.opacity = opacity;
+  }
+};
+
+nav.addEventListener('mouseover', e => handleHover(e, 0.5));
+
+nav.addEventListener('mouseout', e => handleHover(e, 1));
