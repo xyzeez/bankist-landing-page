@@ -83,9 +83,21 @@ nav.addEventListener('mouseover', e => handleHover(e, 0.5));
 nav.addEventListener('mouseout', e => handleHover(e, 1));
 
 // Sticky Nav
-const initialCoords = section1.getBoundingClientRect();
+const header = document.querySelector('header');
+const navHeight = nav.getBoundingClientRect().height;
 
-window.addEventListener('scroll', () => {
-  if (window.scrollY >= initialCoords.top) nav.classList.add('sticky');
-  else nav.classList.remove('sticky');
-});
+const obsCallback = entries => {
+  const [entry] = entries;
+  const intersecting = entry.isIntersecting
+    ? nav.classList.remove('sticky')
+    : nav.classList.add('sticky');
+};
+
+const obsOpts = {
+  root: null,
+  threshold: 0,
+  rootMargin: `-${navHeight}px`,
+};
+
+const observer = new IntersectionObserver(obsCallback, obsOpts);
+observer.observe(header);
