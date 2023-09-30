@@ -164,3 +164,90 @@ const lazyLoadImgObs = new IntersectionObserver(
 lazyLoadImgs.forEach(img => {
   lazyLoadImgObs.observe(img);
 });
+
+//// Slider
+// Slider variables
+const startSlider = () => {
+  const slider = document.querySelector('.slider');
+  const slides = document.querySelectorAll('.slide');
+  const btnRight = document.querySelector('.slider__btn--right');
+  const btnLeft = document.querySelector('.slider__btn--left');
+  const dotContainer = document.querySelector('.dots');
+
+  let currSlide = 0;
+  const maxSlides = slides.length;
+
+  // Slider functions
+  const initSlider = () => {
+    goToSlide(0);
+
+    createDots();
+
+    activateDot(0);
+  };
+
+  const createDots = () => {
+    slides.forEach((_, i) => {
+      // const dotHtml = `<button class="dots__dot" data-slide="${i}"></button>`;
+      dotContainer.insertAdjacentHTML(
+        'beforeend',
+        `<button class="dots__dot" data-slide="${i}"></button>`
+      );
+    });
+  };
+
+  const activateDot = index => {
+    const dots = document.querySelectorAll('.dots__dot');
+    dots.forEach(dot => dot.classList.remove('dots__dot--active'));
+    dots[index].classList.add('dots__dot--active');
+  };
+
+  const goToSlide = slideIndex => {
+    slides.forEach((slide, i) => {
+      slide.style.transform = `translateX(${100 * (i - slideIndex)}%)`;
+    });
+  };
+
+  const nextSlide = () => {
+    if (currSlide === maxSlides - 1) {
+      currSlide = 0;
+    } else {
+      currSlide++;
+    }
+    goToSlide(currSlide);
+    activateDot(currSlide);
+  };
+
+  const prevSlide = () => {
+    if (currSlide === 0) {
+      currSlide = maxSlides - 1;
+    } else {
+      currSlide--;
+    }
+    goToSlide(currSlide);
+    activateDot(currSlide);
+  };
+
+  initSlider();
+
+  // Slider Events
+  btnRight.addEventListener('click', nextSlide);
+
+  btnLeft.addEventListener('click', prevSlide);
+
+  window.addEventListener('keydown', e => {
+    e.key === 'ArrowRight' && nextSlide();
+    e.key === 'ArrowLeft' && prevSlide();
+  });
+
+  dotContainer.addEventListener('click', e => {
+    const dot = e.target.closest('.dots__dot');
+    const slide = dot.dataset.slide;
+
+    goToSlide(slide);
+
+    activateDot(slide);
+  });
+};
+
+startSlider();
