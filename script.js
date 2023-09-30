@@ -86,18 +86,47 @@ nav.addEventListener('mouseout', e => handleHover(e, 1));
 const header = document.querySelector('header');
 const navHeight = nav.getBoundingClientRect().height;
 
-const obsCallback = entries => {
+const headerObsCallback = entries => {
   const [entry] = entries;
   const intersecting = entry.isIntersecting
     ? nav.classList.remove('sticky')
     : nav.classList.add('sticky');
 };
 
-const obsOpts = {
+const headerObsOpts = {
   root: null,
   threshold: 0,
   rootMargin: `-${navHeight}px`,
 };
 
-const observer = new IntersectionObserver(obsCallback, obsOpts);
-observer.observe(header);
+const headerObserver = new IntersectionObserver(
+  headerObsCallback,
+  headerObsOpts
+);
+headerObserver.observe(header);
+
+// Reveal Section
+const sections = document.querySelectorAll('.section');
+
+const sectionObsCallback = (entries, observer) => {
+  const [entry] = entries;
+  if (entry.isIntersecting) {
+    entry.target.classList.remove('section--hidden');
+    observer.unobserve(entry.target);
+  }
+};
+
+const sectionObsOpts = {
+  root: null,
+  threshold: 0.2,
+};
+
+const sectionObserver = new IntersectionObserver(
+  sectionObsCallback,
+  sectionObsOpts
+);
+
+sections.forEach(section => {
+  section.classList.add('section--hidden');
+  sectionObserver.observe(section);
+});
