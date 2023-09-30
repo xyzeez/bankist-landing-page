@@ -110,10 +110,11 @@ const sections = document.querySelectorAll('.section');
 
 const sectionObsCallback = (entries, observer) => {
   const [entry] = entries;
-  if (entry.isIntersecting) {
-    entry.target.classList.remove('section--hidden');
-    observer.unobserve(entry.target);
-  }
+
+  if (!entry.isIntersecting) return;
+
+  entry.target.classList.remove('section--hidden');
+  observer.unobserve(entry.target);
 };
 
 const sectionObsOpts = {
@@ -129,4 +130,37 @@ const sectionObserver = new IntersectionObserver(
 sections.forEach(section => {
   section.classList.add('section--hidden');
   sectionObserver.observe(section);
+});
+
+// Lazy loading images
+const lazyLoadImgs = document.querySelectorAll('img[data-src]');
+
+const lazyLoadObsCallback = (entries, observer) => {
+  const [entry] = entries;
+
+  if (!entry.isIntersecting) return;
+
+  const img = entry.target;
+  const src = img.dataset.src;
+  img.setAttribute('src', src);
+
+  img.addEventListener('load', () => {
+    img.classList.remove('lazy-img');
+  });
+
+  observer.unobserve(img);
+};
+
+const lazyLoadObsOpts = {
+  root: null,
+  threshold: 1,
+  rootMargin: '200px',
+};
+
+const lazyLoadImgObs = new IntersectionObserver(
+  lazyLoadObsCallback,
+  lazyLoadObsOpts
+);
+lazyLoadImgs.forEach(img => {
+  lazyLoadImgObs.observe(img);
 });
